@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="4dp"
-        android:text="Создание комнаты подарков"
+        android:text="Что хотите подарить?"
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -23,15 +23,15 @@
             android:layout_width="88dp"
             android:layout_height="56dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/podarki" />
+            android:src="@drawable/gift" />
 
         <EditText
-            android:id="@+id/et_roomName"
+            android:id="@+id/et_giftName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="4dp"
-            android:hint="Введите название комнаты"
+            android:hint="Укажите Ваш вариант подарка"
             android:inputType="textShortMessage"
             android:textSize="16sp"
             android:textStyle="italic" />

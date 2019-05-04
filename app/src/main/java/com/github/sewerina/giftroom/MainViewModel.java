@@ -21,7 +21,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void createRoom(String name) {
-        mService.createRoom(name);
+        mService.addRoom(name);
         load();
     }
 }

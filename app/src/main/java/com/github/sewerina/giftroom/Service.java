@@ -5,6 +5,4 @@ public interface Service {
     void removeRoom(Room room);
     Iterable<Room> rooms();
     Room roomById(String id);
-
-    void createRoom(String name);
 }

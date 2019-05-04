@@ -63,13 +63,19 @@ public class RoomActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                CreatingGiftDialogFragment.showDialog(getSupportFragmentManager());
+
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewModel.load(mRoomId);
+    }
+
+    public void createGift(String name) {
+        mViewModel.createGift(name);
     }
 
     class GiftHolder extends RecyclerView.ViewHolder {

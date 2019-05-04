@@ -16,12 +16,12 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-public class CreatingRoomDialogFragment extends DialogFragment {
-    private static final String TAG = "CreatingRoomDialog";
+public class CreatingGiftDialogFragment extends DialogFragment {
+    private static final String TAG = "CreatingGiftDialog";
     private EditText mNameEt;
 
     public static void showDialog(FragmentManager fragmentManager) {
-        CreatingRoomDialogFragment dialogFragment = new CreatingRoomDialogFragment();
+        CreatingGiftDialogFragment dialogFragment = new CreatingGiftDialogFragment();
         dialogFragment.show(fragmentManager, TAG);
     }
 
@@ -33,8 +33,8 @@ public class CreatingRoomDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialogfragment_creatingroom, null);
-        mNameEt = view.findViewById(R.id.et_roomName);
+        View view = inflater.inflate(R.layout.dialogfragment_creatinggift, null);
+        mNameEt = view.findViewById(R.id.et_giftName);
 
         Drawable doneIcon = activity.getDrawable(R.drawable.ic_done);
 
@@ -48,8 +48,8 @@ public class CreatingRoomDialogFragment extends DialogFragment {
                         if (name.isEmpty()) {
                             Toast.makeText(activity, "Необходимо указать название!", Toast.LENGTH_SHORT).show();
                         } else {
-                            if (activity instanceof MainActivity) {
-                                ((MainActivity) activity).createRoom(name);
+                            if (activity instanceof RoomActivity) {
+                                ((RoomActivity) activity).createGift(name);
                             }
                         }
                     }
@@ -57,6 +57,5 @@ public class CreatingRoomDialogFragment extends DialogFragment {
 
         return builder.create();
     }
-
 
 }

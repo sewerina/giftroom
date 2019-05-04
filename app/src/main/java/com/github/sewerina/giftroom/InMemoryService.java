@@ -39,17 +39,22 @@ public class InMemoryService implements Service {
         return null;
     }
 
-    @Override
-    public void createRoom(String name) {
-        Room r = new InMemoryRoom(name);
-        mRooms.add(r);
-    }
-
     static class InMemoryRoom implements Room {
+        private final List<Gift> mGifts = new ArrayList<>();
+
         private String mName;
 
         public InMemoryRoom(String name) {
             mName = name;
+
+            mGifts.add(new InMemoryGift("Parfume"));
+            mGifts.add(new InMemoryGift("Toy"));
+            mGifts.add(new InMemoryGift("Flowers"));
+            mGifts.add(new InMemoryGift("Tea cup"));
+            mGifts.add(new InMemoryGift("Cake"));
+            mGifts.add(new InMemoryGift("Travel tickets"));
+
+
         }
 
         @Override
@@ -64,14 +69,15 @@ public class InMemoryService implements Service {
 
         @Override
         public Iterable<Gift> gifts() {
-            List<Gift> gifts = new ArrayList<>();
-            gifts.add(new InMemoryGift("Parfume"));
-            gifts.add(new InMemoryGift("Toy"));
-            gifts.add(new InMemoryGift("Flowers"));
-            gifts.add(new InMemoryGift("Tea cup"));
-            gifts.add(new InMemoryGift("Cake"));
-            gifts.add(new InMemoryGift("Travel tickets"));
-            return gifts;
+
+            return mGifts;
+        }
+
+        @Override
+        public Gift addGift(String name) {
+            Gift g = new InMemoryGift(name);
+            mGifts.add(g);
+            return g;
         }
     }
 

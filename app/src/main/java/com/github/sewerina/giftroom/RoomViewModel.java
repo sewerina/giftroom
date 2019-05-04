@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 public class RoomViewModel extends ViewModel {
     private final Service mService;
+    private Room mRoom;
     private final MutableLiveData<Iterable<Gift>> mGifts = new MutableLiveData<>();
 
     public RoomViewModel(Service service) {
@@ -17,9 +18,14 @@ public class RoomViewModel extends ViewModel {
     }
 
     void load(String id) {
-        Room room = mService.roomById(id);
-        if (room != null) {
-            mGifts.postValue(room.gifts());
+        mRoom = mService.roomById(id);
+        if (mRoom != null) {
+            mGifts.postValue(mRoom.gifts());
         }
+    }
+
+    public void createGift(String name) {
+        mRoom.addGift(name);
+        mGifts.postValue(mRoom.gifts());
     }
 }
