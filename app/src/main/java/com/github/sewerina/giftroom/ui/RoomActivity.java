@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import java.util.List;
 public class RoomActivity extends AppCompatActivity {
     private RoomViewModel mViewModel;
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private GiftAdapter mAdapter;
     private static final String EXTRA_ROOM_ID = "roomId";
     private String mRoomId;
@@ -50,6 +52,14 @@ public class RoomActivity extends AppCompatActivity {
             mRoomId = getIntent().getStringExtra(EXTRA_ROOM_ID);
         }
 
+        mSwipeRefreshLayout = findViewById(R.id.refresher_gifts);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mViewModel.load(mRoomId);
+            }
+        });
+
         mRecyclerView = findViewById(R.id.rv_gifts);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new GiftAdapter();
@@ -57,6 +67,13 @@ public class RoomActivity extends AppCompatActivity {
 
         mViewModel = ViewModelProviders.of(this, App.getViewModelFactory()).get(RoomViewModel.class);
         mViewModel.gifts().observe(this, mAdapter);
+
+        mViewModel.isLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                mSwipeRefreshLayout.setRefreshing(isLoading);
+            }
+        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

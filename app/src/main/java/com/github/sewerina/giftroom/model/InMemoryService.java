@@ -68,9 +68,8 @@ public class InMemoryService implements Service {
         }
 
         @Override
-        public Iterable<Gift> gifts() {
-
-            return mGifts;
+        public void gifts(GiftsLoadedCallback callback) {
+            callback.call(mGifts);
         }
 
         @Override

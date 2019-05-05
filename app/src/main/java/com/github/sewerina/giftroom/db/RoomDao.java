@@ -13,4 +13,7 @@ public interface RoomDao {
 
     @Insert
     void insert(RoomEntity roomEntity);
+
+    @Query("select * from room where id= :id LIMIT 1")
+    RoomEntity getById(String id);
 }
