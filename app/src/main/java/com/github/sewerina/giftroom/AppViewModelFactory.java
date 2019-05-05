@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.github.sewerina.giftroom.model.Service;
+import com.github.sewerina.giftroom.ui.MainViewModel;
+import com.github.sewerina.giftroom.ui.RoomViewModel;
+
 class AppViewModelFactory implements ViewModelProvider.Factory {
     private Service mService;
     public AppViewModelFactory(Service service) {

@@ -1,6 +1,6 @@
-package com.github.sewerina.giftroom;
+package com.github.sewerina.giftroom.model;
 
-interface Room {
+public interface Room {
     String name();
     String id();
     Iterable<Gift> gifts();

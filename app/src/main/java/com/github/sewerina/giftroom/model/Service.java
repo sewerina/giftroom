@@ -1,4 +1,4 @@
-package com.github.sewerina.giftroom;
+package com.github.sewerina.giftroom.model;
 
 public interface Service {
     Room addRoom(String name);

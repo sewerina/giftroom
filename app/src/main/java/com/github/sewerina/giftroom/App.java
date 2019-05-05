@@ -3,6 +3,12 @@ package com.github.sewerina.giftroom;
 import android.app.Application;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
+
+import com.github.sewerina.giftroom.db.AppDatabase;
+import com.github.sewerina.giftroom.model.InMemoryService;
+import com.github.sewerina.giftroom.model.PersistenceService;
+import com.github.sewerina.giftroom.model.Service;
 
 public class App extends Application {
     private static ViewModelProvider.Factory sViewModelFactory;
@@ -11,7 +17,13 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Service service = new InMemoryService();
+        AppDatabase db = Room.databaseBuilder(this,
+                AppDatabase.class, "room.db")
+                .allowMainThreadQueries()
+                .build();
+
+//        Service service = new InMemoryService();
+        Service service = new PersistenceService(db.roomDao());
         sViewModelFactory = new AppViewModelFactory(service);
     }
 

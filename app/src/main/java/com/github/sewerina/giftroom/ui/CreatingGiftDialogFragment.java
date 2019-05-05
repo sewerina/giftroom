@@ -1,4 +1,4 @@
-package com.github.sewerina.giftroom;
+package com.github.sewerina.giftroom.ui;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -15,6 +15,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+
+import com.github.sewerina.giftroom.R;
 
 public class CreatingGiftDialogFragment extends DialogFragment {
     private static final String TAG = "CreatingGiftDialog";

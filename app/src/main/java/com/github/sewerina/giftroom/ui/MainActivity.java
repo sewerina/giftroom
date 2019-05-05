@@ -1,17 +1,17 @@
-package com.github.sewerina.giftroom;
+package com.github.sewerina.giftroom.ui;
 
 import android.os.Bundle;
 
+import com.github.sewerina.giftroom.App;
+import com.github.sewerina.giftroom.R;
+import com.github.sewerina.giftroom.model.Room;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 

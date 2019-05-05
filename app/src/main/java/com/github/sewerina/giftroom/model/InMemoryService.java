@@ -1,4 +1,4 @@
-package com.github.sewerina.giftroom;
+package com.github.sewerina.giftroom.model;
 
 import java.util.ArrayList;
 import java.util.List;

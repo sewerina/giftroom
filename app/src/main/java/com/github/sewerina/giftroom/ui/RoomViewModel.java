@@ -1,8 +1,12 @@
-package com.github.sewerina.giftroom;
+package com.github.sewerina.giftroom.ui;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.github.sewerina.giftroom.model.Gift;
+import com.github.sewerina.giftroom.model.Room;
+import com.github.sewerina.giftroom.model.Service;
 
 public class RoomViewModel extends ViewModel {
     private final Service mService;
