@@ -27,4 +27,8 @@ public class MainViewModel extends ViewModel {
         mService.addRoom(name);
         load();
     }
+
+    public void joinRoom(String id, Room.JoinRoomCallback callback) {
+        mService.joinRoom(id, callback);
+    }
 }

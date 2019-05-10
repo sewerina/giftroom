@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -45,8 +47,6 @@ public class RoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
-
-        setTitle("Gifts");
 
         if(getIntent() != null) {
             mRoomId = getIntent().getStringExtra(EXTRA_ROOM_ID);
@@ -91,6 +91,40 @@ public class RoomActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewModel.load(mRoomId);
+        setTitle("Gifts for " + mViewModel.roomName());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_room, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_share) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Gift Room: " + mViewModel.roomName());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Gift Room: " + mViewModel.roomName() + "\n\n" + "http://giftroom.app/" + mRoomId);
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.title_send_to)));
+            return true;
+        }
+
+        if (id == R.id.action_delete) {
+            mViewModel.deleteRoom();
+            this.finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void createGift(String name) {

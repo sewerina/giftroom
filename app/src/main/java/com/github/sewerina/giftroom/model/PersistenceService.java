@@ -56,9 +56,26 @@ public class PersistenceService implements Service {
         return new PersistenceRoom(roomEntity);
     }
 
+    public void joinRoom(String roomId, final Room.JoinRoomCallback callback) {
+        mFirestore.collection("rooms")
+                .whereEqualTo("id", roomId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            RoomEntity roomEntity = document.toObject(RoomEntity.class);
+                            mRoomDao.insert(roomEntity);
+                        }
+                        callback.call();
+                    }
+                });
+    }
+
     @Override
     public void removeRoom(Room room) {
-
+        RoomEntity roomEntity = mRoomDao.getById(room.id());
+        mRoomDao.delete(roomEntity);
     }
 
     @Override

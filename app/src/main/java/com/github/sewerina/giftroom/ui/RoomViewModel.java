@@ -44,4 +44,15 @@ public class RoomViewModel extends ViewModel implements Room.GiftsLoadedCallback
         mGifts.postValue(gifts);
         mIsLoading.postValue(false);
     }
+
+    public String roomName() {
+        if (mRoom != null) {
+            return mRoom.name();
+        }
+        return null;
+    }
+
+    public void deleteRoom() {
+        mService.removeRoom(mRoom);
+    }
 }

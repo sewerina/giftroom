@@ -1,5 +1,7 @@
 package com.github.sewerina.giftroom.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.github.sewerina.giftroom.App;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +62,33 @@ public class MainActivity extends AppCompatActivity {
 //                        .setAction(null, null).show();
             }
         });
+
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
+            Uri data = intent.getData();
+            if (data != null) {
+                final String id = data.getPath().substring(1);
+                mViewModel.joinRoom(id, new Room.JoinRoomCallback() {
+                    @Override
+                    public void call() {
+                        startActivity(RoomActivity.newIntent(MainActivity.this, id));
+                    }
+                });
+                Toast.makeText(this, action +": "+ id, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, action, Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mViewModel.load();
     }
 
     @Override

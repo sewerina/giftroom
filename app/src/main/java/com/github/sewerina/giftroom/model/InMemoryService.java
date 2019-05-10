@@ -20,6 +20,11 @@ public class InMemoryService implements Service {
     }
 
     @Override
+    public void joinRoom(String roomId, Room.JoinRoomCallback callback) {
+
+    }
+
+    @Override
     public void removeRoom(Room room) {
         mRooms.remove(room);
     }

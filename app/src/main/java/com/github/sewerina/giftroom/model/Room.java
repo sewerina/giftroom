@@ -9,4 +9,8 @@ public interface Room {
     interface GiftsLoadedCallback {
         void call(Iterable<Gift> gifts);
     }
+
+    interface JoinRoomCallback{
+        void call();
+    }
 }
