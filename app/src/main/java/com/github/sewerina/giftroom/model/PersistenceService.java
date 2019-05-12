@@ -1,17 +1,11 @@
 package com.github.sewerina.giftroom.model;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
 import com.github.sewerina.giftroom.db.RoomDao;
 import com.github.sewerina.giftroom.db.RoomEntity;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -30,7 +24,7 @@ public class PersistenceService implements Service {
         init();
     }
 
-    private void init(){
+    private void init() {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -95,6 +89,12 @@ public class PersistenceService implements Service {
         return room;
     }
 
+    public static class GiftEntity {
+        public String id;
+        public String name;
+        public String roomId;
+    }
+
     public class PersistenceRoom implements Room {
 
         private final RoomEntity mRoomEntity;
@@ -124,7 +124,8 @@ public class PersistenceService implements Service {
                             List<Gift> gifts = new ArrayList<>();
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 GiftEntity giftEntity = document.toObject(GiftEntity.class);
-                                gifts.add(new PersistenceGift(giftEntity));
+
+                                gifts.add(new PersistenceGift(giftEntity, document.getId()));
                             }
                             callback.call(gifts);
                         }
@@ -132,23 +133,32 @@ public class PersistenceService implements Service {
         }
 
         @Override
-        public Gift addGift(String name) {
-            GiftEntity giftEntity = new GiftEntity();
+        public void addGift(String name, final GiftAddedCallback callback) {
+            final GiftEntity giftEntity = new GiftEntity();
             giftEntity.name = name;
             giftEntity.id = UUID.randomUUID().toString();
             giftEntity.roomId = id();
-            PersistenceGift gift = new PersistenceGift(giftEntity);
+
             mFirestore.collection("gifts")
-                    .add(giftEntity);
-            return gift;
+                    .add(giftEntity)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            final PersistenceGift gift = new PersistenceGift(giftEntity, documentReference.getId());
+                            callback.call(gift);
+                        }
+                    });
         }
+
     }
 
     public class PersistenceGift implements Gift {
         private final GiftEntity mGiftEntity;
+        private final String mFirestoreId;
 
-        public PersistenceGift(GiftEntity giftEntity) {
+        public PersistenceGift(GiftEntity giftEntity, String firestoreId) {
             mGiftEntity = giftEntity;
+            mFirestoreId = firestoreId;
         }
 
         @Override
@@ -160,11 +170,13 @@ public class PersistenceService implements Service {
         public String id() {
             return mGiftEntity.id;
         }
-    }
 
-    public static class GiftEntity {
-        public String id;
-        public String name;
-        public String roomId;
+        @Override
+        public void delete() {
+            mFirestore.collection("gifts")
+                    .document(mFirestoreId)
+                    .delete();
+        }
+
     }
 }

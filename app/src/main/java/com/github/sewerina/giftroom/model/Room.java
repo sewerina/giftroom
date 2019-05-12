@@ -4,7 +4,7 @@ public interface Room {
     String name();
     String id();
     void gifts(GiftsLoadedCallback callback);
-    Gift addGift(String name);
+    void addGift(String name, GiftAddedCallback callback);
 
     interface GiftsLoadedCallback {
         void call(Iterable<Gift> gifts);
@@ -12,5 +12,9 @@ public interface Room {
 
     interface JoinRoomCallback{
         void call();
+    }
+
+    interface GiftAddedCallback {
+        void call(Gift gift);
     }
 }

@@ -8,7 +8,7 @@ import com.github.sewerina.giftroom.model.Gift;
 import com.github.sewerina.giftroom.model.Room;
 import com.github.sewerina.giftroom.model.Service;
 
-public class RoomViewModel extends ViewModel implements Room.GiftsLoadedCallback {
+public class RoomViewModel extends ViewModel implements Room.GiftsLoadedCallback, Room.GiftAddedCallback {
     private final Service mService;
     private Room mRoom;
     private final MutableLiveData<Iterable<Gift>> mGifts = new MutableLiveData<>();
@@ -34,9 +34,8 @@ public class RoomViewModel extends ViewModel implements Room.GiftsLoadedCallback
     }
 
     public void createGift(String name) {
-        mRoom.addGift(name);
         mIsLoading.postValue(true);
-        mRoom.gifts(this);
+        mRoom.addGift(name, this);
     }
 
     @Override
@@ -54,5 +53,14 @@ public class RoomViewModel extends ViewModel implements Room.GiftsLoadedCallback
 
     public void deleteRoom() {
         mService.removeRoom(mRoom);
+    }
+
+    public void deleteGift(Gift gift) {
+        gift.delete();
+    }
+
+    @Override
+    public void call(Gift gift) {
+        mRoom.gifts(this);
     }
 }

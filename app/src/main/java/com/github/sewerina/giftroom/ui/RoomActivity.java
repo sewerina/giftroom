@@ -8,16 +8,20 @@ import com.github.sewerina.giftroom.App;
 import com.github.sewerina.giftroom.R;
 import com.github.sewerina.giftroom.model.Gift;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +40,22 @@ public class RoomActivity extends AppCompatActivity {
     private GiftAdapter mAdapter;
     private static final String EXTRA_ROOM_ID = "roomId";
     private String mRoomId;
+
+    private ItemTouchHelper.SimpleCallback mItemTouchHelperCallback =
+            new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView,
+                              @NonNull RecyclerView.ViewHolder viewHolder,
+                              @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            mAdapter.deleteItem(position);
+        }
+    };
 
     public static Intent newIntent(Context context, String roomId) {
         Intent intent = new Intent(context, RoomActivity.class);
@@ -64,6 +84,7 @@ public class RoomActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new GiftAdapter();
         mRecyclerView.setAdapter(mAdapter);
+        new ItemTouchHelper(mItemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         mViewModel = ViewModelProviders.of(this, App.getViewModelFactory()).get(RoomViewModel.class);
         mViewModel.gifts().observe(this, mAdapter);
@@ -161,6 +182,8 @@ public class RoomActivity extends AppCompatActivity {
 
     class GiftAdapter extends RecyclerView.Adapter<GiftHolder> implements Observer<Iterable<Gift>> {
         private final List<Gift> mGifts = new ArrayList<>();
+        private Gift mRecentlyDeletedItem;
+        private int mRecentlyDeletedItemPosition;
 
         @NonNull
         @Override
@@ -185,6 +208,39 @@ public class RoomActivity extends AppCompatActivity {
             mGifts.clear();
             mGifts.addAll((Collection<? extends Gift>) gifts);
             notifyDataSetChanged();
+        }
+
+        public void deleteItem(int position) {
+            mRecentlyDeletedItem = mGifts.get(position);
+            mRecentlyDeletedItemPosition = position;
+            mGifts.remove(position);
+            notifyItemRemoved(position);
+            showUndoSnackbar();
+        }
+
+        private void showUndoSnackbar() {
+            Snackbar snackbar = Snackbar.make(RoomActivity.this.mRecyclerView, "Remove this gift from the list", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Cancel the deletion", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.undoDelete();
+                }
+            });
+            snackbar.addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    Log.d("Callback", "onDismissed: " + event);
+                    if (event != 1) {
+                        mViewModel.deleteGift(mRecentlyDeletedItem);
+                    }
+                }
+            });
+            snackbar.show();
+        }
+
+        public void undoDelete() {
+            mGifts.add(mRecentlyDeletedItemPosition, mRecentlyDeletedItem);
+            notifyItemInserted(mRecentlyDeletedItemPosition);
         }
     }
 

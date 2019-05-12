@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import com.github.sewerina.giftroom.db.AppDatabase;
-import com.github.sewerina.giftroom.model.InMemoryService;
 import com.github.sewerina.giftroom.model.PersistenceService;
 import com.github.sewerina.giftroom.model.Service;
 
@@ -22,7 +21,6 @@ public class App extends Application {
                 .allowMainThreadQueries()
                 .build();
 
-//        Service service = new InMemoryService();
         Service service = new PersistenceService(db.roomDao());
         sViewModelFactory = new AppViewModelFactory(service);
     }
