@@ -57,16 +57,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 CreatingRoomDialogFragment.showDialog(getSupportFragmentManager());
-
-//                Snackbar.make(view, "Новая комната добавлена!", Snackbar.LENGTH_SHORT)
-//                        .setAction(null, null).show();
             }
         });
 
 
         Intent intent = getIntent();
         if (intent != null) {
-            String action = intent.getAction();
             Uri data = intent.getData();
             if (data != null) {
                 final String id = data.getPath().substring(1);
@@ -76,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(RoomActivity.newIntent(MainActivity.this, id));
                     }
                 });
-                Toast.makeText(this, action +": "+ id, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, action, Toast.LENGTH_LONG).show();
             }
         }
 
